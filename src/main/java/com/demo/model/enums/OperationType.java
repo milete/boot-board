@@ -19,7 +19,7 @@ public enum OperationType {
     UPDATE("2", "修改"),
     DELETE("3", "删除"),
     IMPORT("4", "导入"),
-    EXPORT("6", "导出");
+    EXPORT("5", "导出");
 
     /**
      * 数据库存该字段，字段类型要与数据库字段类型对应

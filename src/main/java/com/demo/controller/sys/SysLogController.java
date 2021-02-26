@@ -1,12 +1,15 @@
 package com.demo.controller.sys;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.demo.annotation.Log;
 import com.demo.common.PageVo;
 import com.demo.common.JsonResult;
+import com.demo.model.enums.OperationType;
 import com.demo.model.po.sys.SysLog;
 import com.demo.service.sys.SysLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,5 +32,15 @@ public class SysLogController {
     public JsonResult list(PageVo pageVo) {
         IPage<SysLog> list = this.sysLogService.selectList(pageVo);
         return JsonResult.success(list);
+    }
+
+    @ApiOperation("导出")
+    @PostMapping("export")
+    public JsonResult export() {
+        String msg = this.sysLogService.export();
+        if (StringUtils.isNotBlank(msg)) {
+            return JsonResult.failed(msg);
+        }
+        return null;
     }
 }

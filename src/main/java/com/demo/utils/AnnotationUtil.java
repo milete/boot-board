@@ -16,30 +16,26 @@ import java.util.stream.Collectors;
 public class AnnotationUtil {
 
     /**
-     * 提取swagger注解的字段
+     * 提取swagger注解的字段，按position排序
      *
      * @param clazz Class<?>
-     * @return Map<字段名, swagger描述>
+     * @return Map<字段名, 字段的swagger描述>
      */
     public static Map<String, String> getSwaggerAnnotationData(Class<?> clazz) {
         List<Field> fieldList = getAllFields(clazz);
-        Map<ApiModelProperty, Field> dataMap = new HashMap<>(fieldList.size());
-        fieldList.forEach(c -> {
-            ApiModelProperty annotation = c.getAnnotation(ApiModelProperty.class);
-            if (annotation == null || annotation.hidden() || StringUtils.isBlank(annotation.value())) {
+        //dataMap<ApiModelProperty，字段名>
+        Map<ApiModelProperty, String> dataMap = new HashMap<>(fieldList.size());
+        fieldList.forEach(filed -> {
+            ApiModelProperty annotation = filed.getAnnotation(ApiModelProperty.class);
+            if (Objects.isNull(annotation) || annotation.hidden() || StringUtils.isBlank(annotation.value())) {
                 return;
             }
-            dataMap.put(annotation, c);
+            dataMap.put(annotation, filed.getName());
         });
-        List<ApiModelProperty> titleList = dataMap.keySet()
+        return dataMap.entrySet()
                 .stream()
-                .sorted(Comparator.comparingInt(ApiModelProperty::position))
-                .collect(Collectors.toList());
-        Map<String, String> titleMap = new LinkedHashMap<>(titleList.size());
-        titleList.forEach(c -> {
-            titleMap.put(dataMap.get(c).getName(), c.value());
-        });
-        return titleMap;
+                .sorted(Comparator.comparingInt(c -> c.getKey().position()))
+                .collect(Collectors.toMap(Map.Entry::getValue, c -> c.getKey().value(), (c1, c2) -> c1, LinkedHashMap::new));
     }
 
     /**
@@ -50,7 +46,7 @@ public class AnnotationUtil {
      */
     private static List<Field> getAllFields(Class<?> clazz) {
         List<Field> list = new ArrayList<>();
-        while (clazz != null && clazz != Object.class) {
+        while (Objects.nonNull(clazz) && clazz != Object.class) {
             list.addAll(Arrays.asList(clazz.getDeclaredFields()));
             //得到父类，赋给自己
             clazz = clazz.getSuperclass();
