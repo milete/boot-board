@@ -1,13 +1,15 @@
 package com.demo.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.demo.common.PageVo;
 import com.demo.mapper.DemoMapper;
 import com.demo.model.po.Demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * description：测试
@@ -26,8 +28,10 @@ public class DemoService {
      *
      * @return
      */
-    public List<Demo> selectList() {
-        return this.demoMapper.selectList(new QueryWrapper<>());
+    public IPage<Demo> selectList(PageVo pageVo) {
+        Page<Demo> page = new Page<>(pageVo.getPage(), pageVo.getSize());
+        page.addOrder(OrderItem.desc("create_time"));
+        return this.demoMapper.selectPage(page, new QueryWrapper<>());
     }
 
     /**

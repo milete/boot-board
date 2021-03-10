@@ -1,11 +1,9 @@
 package com.demo.controller.sys;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.demo.annotation.Log;
 import com.demo.common.PageVo;
 import com.demo.common.JsonResult;
 import com.demo.model.enums.OperationType;
-import com.demo.model.po.sys.SysLog;
 import com.demo.service.sys.SysLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,12 +28,12 @@ public class SysLogController {
     @ApiOperation("列表")
     @GetMapping("list")
     public JsonResult list(PageVo pageVo) {
-        IPage<SysLog> list = this.sysLogService.selectList(pageVo);
-        return JsonResult.success(list);
+        return JsonResult.success(this.sysLogService.selectList(pageVo));
     }
 
     @ApiOperation("导出")
     @PostMapping("export")
+    @Log(module = "测试", operationType = OperationType.EXPORT)
     public JsonResult export() {
         String msg = this.sysLogService.export();
         if (StringUtils.isNotBlank(msg)) {

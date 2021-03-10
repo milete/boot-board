@@ -2,6 +2,7 @@ package com.demo.controller;
 
 import com.demo.annotation.Log;
 import com.demo.common.JsonResult;
+import com.demo.common.PageVo;
 import com.demo.model.enums.OperationType;
 import com.demo.model.po.Demo;
 import com.demo.service.DemoService;
@@ -26,14 +27,22 @@ public class DemoController {
 
     @ApiOperation("列表")
     @GetMapping("list")
-    public JsonResult selectList() {
-        return JsonResult.success(this.demoService.selectList());
+    public JsonResult selectList(PageVo pageVo) {
+        return JsonResult.success(this.demoService.selectList(pageVo));
     }
 
     @ApiOperation("新增")
     @PostMapping("insert")
     @Log(module = "测试", operationType = OperationType.INSERT)
-    public JsonResult insert(@RequestBody Demo demo) {
+    public JsonResult insert(Demo demo) {
+        this.demoService.insert(demo);
+        return JsonResult.success();
+    }
+
+    @ApiOperation("新增 application/json")
+    @PostMapping("insert4Json")
+    @Log(module = "测试", operationType = OperationType.INSERT)
+    public JsonResult insert4Json(@RequestBody Demo demo) {
         this.demoService.insert(demo);
         return JsonResult.success();
     }

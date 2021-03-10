@@ -147,4 +147,5 @@
             <appender-ref ref="ERROR_FILE"/>
         </root>
     </springProfile>
+    <logger name="com.demo" level="DEBUG" />
 </configuration>

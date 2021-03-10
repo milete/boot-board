@@ -18,4 +18,7 @@ public class Demo extends BasePo {
 
     @ApiModelProperty(value = "名称")
     private String name;
+
+    @ApiModelProperty(value = "描述")
+    private String description;
 }
